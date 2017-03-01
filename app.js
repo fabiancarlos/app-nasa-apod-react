@@ -65,11 +65,23 @@ const stylesCard = StyleSheet.create({
   },
   image: {
     width: ImageWidth,
-    height: ImageHeight - 350
+    height: ImageHeight - 300
   },
   video: {
     width: ImageWidth,
-    height: ImageHeight - 350
+    height: ImageHeight - 300
+  },
+  title: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#ffffff',
+    padding: 10,
+    backgroundColor: 'transparent',
+    textShadowColor: '#000000',
+    textShadowOffset: {width: 1, height: 1}
   },
   content: {
     fontSize: 14,
@@ -122,6 +134,7 @@ class CardContent extends Component {
       <View style={stylesCard.container}>
         <View style={styles.imageWrapper}>
           { this._media() }
+          <Text style={stylesCard.title}>{this.props.title}</Text>
           <Text style={stylesCard.copyright}>{this.props.copyright}</Text>
         </View>
 
@@ -217,6 +230,7 @@ export default class AppNasaApod extends Component {
               this.state.loading ?
               <Spinner></Spinner> :
               <CardContent
+                title={this.state.result.title}
                 content={this.state.result.explanation}
                 url={this.state.result.url}
                 media_type={this.state.result.media_type}

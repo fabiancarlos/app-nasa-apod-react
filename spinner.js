@@ -4,17 +4,22 @@ import {
   StyleSheet,
   Text,
   ActivityIndicator,
+  Dimensions,
   View
 } from 'react-native';
+
+const ImageWidth = Dimensions.get('window').width;
 
 type State = { animating: boolean; };
 type Timer = number;
 
 const styles = StyleSheet.create({
-  centering: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  container: {
     padding: 10,
+  },
+  spinner: {
+    width: ImageWidth,
+    height: 400
   },
   gray: {
     backgroundColor: '#cccccc',
@@ -49,10 +54,10 @@ export default class Spinner extends Component {
 
   render(){
     return (
-      <View style={styles.centering}>
+      <View style={styles.container}>
         <ActivityIndicator
           animating={this.state.animating}
-          style={{height: 80}}
+          style={styles.spinner}
           size="large"
         />
       </View>
