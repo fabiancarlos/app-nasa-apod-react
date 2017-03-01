@@ -10,7 +10,7 @@ import {
   Button,
   View
 } from 'react-native';
-import Spinner from './spinner';
+import Spinner from './app/components/spinner';
 import Moment from 'moment';
 
 const ImageWidth = Dimensions.get('window').width;

@@ -1,30 +1,14 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  StyleSheet,
   Text,
   ActivityIndicator,
-  Dimensions,
   View
 } from 'react-native';
-
-const ImageWidth = Dimensions.get('window').width;
+import { spinnerStyle } from './style';
 
 type State = { animating: boolean; };
 type Timer = number;
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  spinner: {
-    width: ImageWidth,
-    height: 400
-  },
-  gray: {
-    backgroundColor: '#cccccc',
-  }
-});
 
 export default class Spinner extends Component {
   state: State;
@@ -53,15 +37,21 @@ export default class Spinner extends Component {
   }
 
   render(){
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator
-          animating={this.state.animating}
-          style={styles.spinner}
-          size="large"
-        />
-      </View>
-    );
+    if (this.state.animating) {
+      return (
+        <View style={spinnerStyle.container}>
+          <ActivityIndicator
+            animating={this.state.animating}
+            style={spinnerStyle.spinner}
+            size="large"
+            color="#dddddd"
+          />
+          <Text style={spinnerStyle.label}>Aguarde...</Text>
+        </View>
+      );
+    } else {
+      return null;
+    }
   }
 }
 
