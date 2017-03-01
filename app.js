@@ -8,7 +8,9 @@ import {
   ScrollView,
   Dimensions,
   Button,
-  View
+  View,
+  TouchableWithoutFeedback,
+  DatePickerAndroid
 } from 'react-native';
 import Spinner from './app/components/spinner';
 import Moment from 'moment';
@@ -153,7 +155,9 @@ export default class AppNasaApod extends Component {
       showText: true,
       result: {},
       loading: true,
-      try_again: false
+      try_again: false,
+      todayDate: new Date(),
+      todayLabel: ''
     };
   }
 
@@ -163,6 +167,10 @@ export default class AppNasaApod extends Component {
 
   componentDidMount() {
     let today = Moment().format('YYYY[-]MM[-]DD');
+
+    this.setState({
+      todayLabel: Moment(this.state.todayDate).format('DD[/]MM[/]YYYY')
+    })
 
     let that = this;
     this.loadData(today);
@@ -183,7 +191,7 @@ export default class AppNasaApod extends Component {
     };
     const urlWithParam = `${ApiUrl}?api_key=${ApiKey}&date=${date}`;
 
-    console.log("TODAYY >>", Moment().format('YYYY[-]MM[-]DD'), urlWithParam);
+    // console.log("TODAYY >>", Moment().format('YYYY[-]MM[-]DD'), urlWithParam);
 
     let that = this;
     return fetch(urlWithParam, config)
@@ -220,12 +228,41 @@ export default class AppNasaApod extends Component {
     }
   }
 
+  showPicker = async (stateKey, options) => {
+    try {
+      var newState = {};
+      const {action, year, month, day} = await DatePickerAndroid.open(options);
+      if (action === DatePickerAndroid.dismissedAction) {
+        // newState[stateKey + 'Text'] = 'dismissed';
+      } else {
+        let new_date = new Date(year, month, day)
+        this.setState({
+          todayDate: new_date,
+          todayLabel: Moment(new_date).format('DD[/]MM[/]YYYY')
+        });
+
+        this.loadData(`${year}-${month}-${day}`);
+      }
+      this.setState(newState);
+    } catch ({code, message}) {
+      console.warn(`Error in example '${stateKey}': `, message);
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <NavBar></NavBar>
         <ScrollView>
           <View style={styles.main}>
+
+            <TouchableWithoutFeedback
+              onPress={this.showPicker.bind(this, 'simple', {date: this.state.todayDate})}>
+              <View>
+                <Text style={styles.date_text}>Escolha o dia: {this.state.todayLabel}</Text>
+              </View>
+            </TouchableWithoutFeedback>
+
             {
               this.state.loading ?
               <Spinner></Spinner> :
@@ -264,9 +301,15 @@ const styles = StyleSheet.create({
   },
   instructions: {
     textAlign: 'center',
-    color: '#333333',
+    color: '#ffffff',
     marginBottom: 5,
   },
+  date_text: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#dddddd',
+    padding: 10,
+  }
 });
 
 AppRegistry.registerComponent('AppNasaApod', () => AppNasaApod);
